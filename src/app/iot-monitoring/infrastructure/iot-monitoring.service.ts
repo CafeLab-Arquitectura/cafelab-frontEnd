@@ -14,6 +14,14 @@ import type {
 } from '../domain/model/environmental-reading.entity';
 import type { CoffeeLotSummary } from '../domain/model/coffee-lot-summary.model';
 
+interface TelemetryRecordResponse {
+  id: number;
+  coffeeLotId: number;
+  temperature: number;
+  humidity: number;
+  timestamp: string | Date;
+}
+
 /**
  * Servicio HTTP para el bounded context de IoT Monitoring.
  * Todos los endpoints requieren JWT autenticado; el backend resuelve el userId desde el token.
@@ -77,12 +85,25 @@ export class IoTMonitoringService {
   }
 
   /**
-   * GET /api/v1/iot-monitoring/histories/batch/{batchId}
-   * Retorna el historial de lecturas ambientales para un lote específico.
+   * GET /api/v1/telemetry-records/coffee-lot/{coffeeLotId}
+   * Retorna el historial real de lecturas ambientales enviadas por el edge.
    */
-  getHistoriesByBatch(batchId: number): Observable<IoTMonitoringHistory[]> {
-    const url = `${this.baseUrl}${environment.iotMonitoringHistoriesEndpointPath}/batch/${batchId}`;
-    return this.http.get<IoTMonitoringHistory[]>(url, this.httpOptions);
+  getHistoriesByBatch(coffeeLotId: number): Observable<IoTMonitoringHistory[]> {
+    const url = `${this.baseUrl}${environment.telemetryRecordsEndpointPath}/coffee-lot/${coffeeLotId}`;
+    return this.http.get<TelemetryRecordResponse[]>(url, this.httpOptions).pipe(
+      map((records) =>
+        (Array.isArray(records) ? records : [])
+          .map((record) => ({
+            id: Number(record.id),
+            connectionState: true,
+            temperature: Number(record.temperature),
+            humidity: Number(record.humidity),
+            iotMonitoringDataId: 0,
+            timestamp: record.timestamp,
+          }))
+          .reverse()
+      )
+    );
   }
 
   /**

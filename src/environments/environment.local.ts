@@ -21,5 +21,6 @@ export const environment = {
   iotMonitoringDataEndpointPath: '/api/v1/iot-monitoring/data',
   iotMonitoringHistoriesEndpointPath: '/api/v1/iot-monitoring/histories',
   iotMonitoringDashboardEndpointPath: '/api/v1/iot-monitoring/dashboard',
-  iotMonitoringSimulatorEndpointPath: '/api/v1/iot-monitoring/simulator/generate-reading'
+  iotMonitoringSimulatorEndpointPath: '/api/v1/iot-monitoring/simulator/generate-reading',
+  telemetryRecordsEndpointPath: '/api/v1/telemetry-records'
 };
