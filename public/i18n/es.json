@@ -378,9 +378,9 @@
       "STATUS_OPTIMAL": "Óptimo",
       "STATUS_WARNING": "Advertencia",
       "STATUS_CRITICAL": "Crítico",
-      "DEHUMIDIFIER": "Deshumidificador",
-      "DEHUMIDIFIER_ON": "Encendido",
-      "DEHUMIDIFIER_OFF": "Apagado",
+      "DEHUMIDIFIER": "Actuadores",
+      "DEHUMIDIFIER_ON": "Encendidos",
+      "DEHUMIDIFIER_OFF": "Apagados",
       "LAST_UPDATED": "Última actualización"
     },
     "CONFIGURE": {

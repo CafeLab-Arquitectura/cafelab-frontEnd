@@ -378,7 +378,7 @@
       "STATUS_OPTIMAL": "Optimal",
       "STATUS_WARNING": "Warning",
       "STATUS_CRITICAL": "Critical",
-      "DEHUMIDIFIER": "Dehumidifier",
+      "DEHUMIDIFIER": "Actuators",
       "DEHUMIDIFIER_ON": "On",
       "DEHUMIDIFIER_OFF": "Off",
       "LAST_UPDATED": "Last updated"
