@@ -103,7 +103,6 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
   lastUpdate: Date = new Date();
 
   isLoading = false;
-  isGenerating = false;
   isSavingManualReading = false;
   private chartReady = false;
   activeSection: IotSection = 'lots';
@@ -217,34 +216,6 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
       error: (err) => {
         console.error('[IoT Dashboard] Error loading monitoring config:', err);
         this.showSnackBar('IOT.MESSAGES.CONFIG_LOAD_ERROR', 'IOT.MESSAGES.CLOSE');
-      },
-    });
-  }
-
-  // ─── Simulator ─────────────────────────────────────────────────────────────
-
-  generateReading(): void {
-    if (this.isGenerating || !this.selectedLotId) return;
-    this.isGenerating = true;
-    this.iotService.generateSimulatedReading(this.selectedLotId).subscribe({
-      next: (reading) => {
-        this.isGenerating = false;
-        this.snackBar.open(
-          this.translate.instant('IOT.MESSAGES.SIMULATED_READING_CREATED', {
-            temperature: reading.temperature.toFixed(1),
-            humidity: reading.humidity.toFixed(0),
-          }),
-          this.translate.instant('IOT.MESSAGES.OK'),
-          { duration: 4000 },
-        );
-        if (this.selectedLotId) {
-          this.refreshSelectedLotHistory();
-        }
-      },
-      error: (err) => {
-        console.error('[IoT Simulator] Error generating reading:', err);
-        this.isGenerating = false;
-        this.showSnackBar('IOT.MESSAGES.SIMULATED_READING_ERROR', 'IOT.MESSAGES.CLOSE');
       },
     });
   }

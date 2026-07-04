@@ -102,6 +102,7 @@ export class IoTMonitoringService {
             timestamp: record.timestamp,
           }))
           .reverse()
+          .slice(0, 10)
       )
     );
   }

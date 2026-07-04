@@ -15,10 +15,6 @@
         <p class="page-eyebrow">{{ 'IOT.PAGE_EYEBROW' | translate }}</p>
         <h1 class="page-title">{{ 'IOT.DASHBOARD.TITLE' | translate }}</h1>
       </div>
-      <button mat-raised-button id="btn-generate-reading" class="action-button action-button--generate"
-        (click)="generateReading()" [disabled]="isGenerating || !selectedLotId">
-        {{ isGenerating ? ('IOT.MESSAGES.GENERATING' | translate) : ('IOT.CONFIGURE.GENERATE_DATA' | translate) }}
-      </button>
     </div>
 
     <section class="module-options" [attr.aria-label]="'IOT.SECTIONS.ARIA_LABEL' | translate">
@@ -271,8 +267,6 @@
         class="empty-state-block empty-state-block--batch">
         <span class="empty-state-icon">{{ 'IOT.EMPTY.NO_READINGS_TITLE' | translate }}</span>
         <p>{{ 'IOT.EMPTY.NO_READINGS_MESSAGE' | translate }}</p>
-        <p class="empty-state-hint">{{ 'IOT.EMPTY.NO_READINGS_HINT_PREFIX' | translate }} <strong>{{ 'IOT.CONFIGURE.GENERATE_DATA' |
-            translate }}</strong>.</p>
       </div>
     </div>
   </div>
