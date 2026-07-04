@@ -36,14 +36,14 @@ export class ConfigureThresholdsDialogComponent {
       {
         minTemperature: [
           this.data.minTemperature,
-          [Validators.required, Validators.min(0), Validators.max(40)],
+          [Validators.required, Validators.min(0), Validators.max(150)],
         ],
         maxTemperature: [
           this.data.maxTemperature,
-          [Validators.required, Validators.min(0), Validators.max(40)],
+          [Validators.required, Validators.min(0), Validators.max(150)],
         ],
-        minHumidity: [this.data.minHumidity, [Validators.required, Validators.min(0), Validators.max(100)]],
-        maxHumidity: [this.data.maxHumidity, [Validators.required, Validators.min(0), Validators.max(100)]],
+        minHumidity: [this.data.minHumidity, [Validators.required, Validators.min(0), Validators.max(150)]],
+        maxHumidity: [this.data.maxHumidity, [Validators.required, Validators.min(0), Validators.max(150)]],
       },
       {
         validators: [
