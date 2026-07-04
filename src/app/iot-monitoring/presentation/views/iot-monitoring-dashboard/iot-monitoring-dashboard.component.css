@@ -290,61 +290,6 @@
   align-self: flex-start;
 }
 
-.manual-reading-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.manual-reading-form {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  color: #2d3a36;
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
-.form-field input,
-.form-field select {
-  min-height: 40px;
-  border: 1px solid #cbe0da;
-  border-radius: 8px;
-  padding: 0 10px;
-  color: #243833;
-  background: #ffffff;
-  font: inherit;
-  outline: none;
-}
-
-.form-field input:focus,
-.form-field select:focus {
-  border-color: #5c8d89;
-  box-shadow: 0 0 0 3px rgba(92, 141, 137, 0.15);
-}
-
-.form-field small {
-  color: #9b2c1d;
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-
-.manual-reading-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  color: #5c6e69;
-  font-size: 0.82rem;
-}
-
 .threshold-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -545,7 +490,6 @@
 
   .module-options,
   .analytics-kpi-grid,
-  .manual-reading-form,
   .threshold-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -553,11 +497,6 @@
   .lot-toolbar {
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .manual-reading-actions {
-    align-items: stretch;
-    flex-direction: column;
   }
 
   .analytics-panel-header {
@@ -584,7 +523,6 @@
 @media (max-width: 480px) {
   .kpi-grid,
   .analytics-kpi-grid,
-  .manual-reading-form,
   .module-options,
   .threshold-grid {
     grid-template-columns: 1fr;

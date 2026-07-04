@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -26,11 +26,9 @@ import {
 import { AuthService } from '../../../../auth/infrastructure/AuthService';
 import { ToolbarComponent } from '../../../../public/presentation/components/toolbar/toolbar.component';
 import {
-  CreateIoTMonitoringHistoryRequest,
-  IoTMonitoringData,
   IoTMonitoringHistory,
   ThresholdRange,
-  UpdateIoTMonitoringDataRequest,
+  UpdateEnvironmentThresholdRequest,
 } from '../../../domain/model/environmental-reading.entity';
 import { IoTMonitoringService } from '../../../infrastructure/iot-monitoring.service';
 import { ConfigureThresholdsDialogComponent } from '../../components/configure-thresholds-dialog/configure-thresholds-dialog.component';
@@ -57,7 +55,6 @@ Chart.register(
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatDialogModule,
@@ -76,17 +73,6 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
   private historyChart: Chart | null = null;
   private realtimeSubscription?: Subscription;
 
-  monitoringData: IoTMonitoringData = {
-    id: 0,
-    sensorConnected: true,
-    dehumidifierConnected: true,
-    minTemperature: 18,
-    maxTemperature: 24,
-    minHumidity: 50,
-    maxHumidity: 65,
-    userId: 0,
-  };
-
   thresholds: ThresholdRange = {
     minTemperature: 18,
     maxTemperature: 24,
@@ -103,8 +89,8 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
   lastUpdate: Date = new Date();
 
   isLoading = false;
-  isSavingManualReading = false;
   private chartReady = false;
+  private syncIntervalSeconds = 5;
   activeSection: IotSection = 'lots';
 
   readonly moduleOptions: { id: IotSection; titleKey: string; descriptionKey: string }[] = [
@@ -132,10 +118,8 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
 
   coffeeLots: CoffeeLotSummary[] = [];
   selectedLotId: number | null = null;
-  readonly manualReadingForm;
 
   constructor(
-    private readonly fb: FormBuilder,
     private readonly dialog: MatDialog,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
@@ -143,17 +127,9 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
     private readonly iotService: IoTMonitoringService,
     private readonly snackBar: MatSnackBar,
     private readonly translate: TranslateService,
-  ) {
-    this.manualReadingForm = this.fb.group({
-      temperature: [20, [Validators.required, Validators.min(0), Validators.max(40)]],
-      humidity: [60, [Validators.required, Validators.min(0), Validators.max(100)]],
-      connectionState: [true, [Validators.required]],
-      timestamp: [this.toDatetimeLocalValue(new Date()), [Validators.required]],
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
-    this.loadMonitoringConfig();
     this.loadCoffeeLots();
   }
 
@@ -194,71 +170,21 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
   get dehumidifierStatusKey(): string {
     if (this.dehumidifierStatus) return this.dehumidifierStatus;
     if (!this.currentReading) return 'IOT.DASHBOARD.DEHUMIDIFIER_OFF';
-    return this.currentReading.humidity > this.thresholds.maxHumidity &&
-      this.monitoringData.dehumidifierConnected
+    return this.currentReading.humidity > this.thresholds.maxHumidity
       ? 'IOT.DASHBOARD.DEHUMIDIFIER_ON'
       : 'IOT.DASHBOARD.DEHUMIDIFIER_OFF';
   }
 
   // ─── Data loading ──────────────────────────────────────────────────────────
 
-  private loadMonitoringConfig(): void {
-    this.iotService.getData().subscribe({
-      next: (data) => {
-        this.monitoringData = data;
-        this.thresholds = {
-          minTemperature: data.minTemperature,
-          maxTemperature: data.maxTemperature,
-          minHumidity: data.minHumidity,
-          maxHumidity: data.maxHumidity,
-        };
-      },
-      error: (err) => {
-        console.error('[IoT Dashboard] Error loading monitoring config:', err);
-        this.showSnackBar('IOT.MESSAGES.CONFIG_LOAD_ERROR', 'IOT.MESSAGES.CLOSE');
-      },
-    });
-  }
+  // ─── Configure dialog ──────────────────────────────────────────────────────
 
-  saveManualReading(): void {
+  openConfigureRanges(): void {
     if (!this.selectedLotId) {
       this.showSnackBar('IOT.MANUAL.NO_LOT_SELECTED', 'IOT.MESSAGES.CLOSE');
       return;
     }
 
-    if (this.manualReadingForm.invalid) {
-      this.manualReadingForm.markAllAsTouched();
-      return;
-    }
-
-    const raw = this.manualReadingForm.getRawValue();
-    const payload: CreateIoTMonitoringHistoryRequest = {
-      connectionState: raw.connectionState === true,
-      temperature: Number(raw.temperature),
-      humidity: Number(raw.humidity),
-      timestamp: new Date(String(raw.timestamp)).toISOString(),
-      batchId: this.selectedLotId,
-    };
-
-    this.isSavingManualReading = true;
-    this.iotService.createManualHistory(payload).subscribe({
-      next: () => {
-        this.isSavingManualReading = false;
-        this.showSnackBar('IOT.MANUAL.SAVE_SUCCESS', 'IOT.MESSAGES.OK', 3000);
-        this.manualReadingForm.patchValue({ timestamp: this.toDatetimeLocalValue(new Date()) });
-        this.refreshSelectedLotHistory();
-      },
-      error: (err) => {
-        console.error('[IoT Manual Reading] Error saving reading:', err);
-        this.isSavingManualReading = false;
-        this.showSnackBar('IOT.MANUAL.SAVE_ERROR', 'IOT.MESSAGES.CLOSE');
-      },
-    });
-  }
-
-  // ─── Configure dialog ──────────────────────────────────────────────────────
-
-  openConfigureRanges(): void {
     const dialogRef = this.dialog.open(ConfigureThresholdsDialogComponent, {
       width: '520px',
       data: this.thresholds,
@@ -268,23 +194,29 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
     dialogRef.afterClosed().subscribe((result?: ThresholdRange) => {
       if (!result) return;
 
-      const payload: UpdateIoTMonitoringDataRequest = {
-        sensorConnected: this.monitoringData.sensorConnected,
-        dehumidifierConnected: this.monitoringData.dehumidifierConnected,
+      const coffeeLotId = this.selectedLotId;
+      if (!coffeeLotId) return;
+
+      const payload: UpdateEnvironmentThresholdRequest = {
+        coffeeLotId,
         minTemperature: result.minTemperature,
         maxTemperature: result.maxTemperature,
         minHumidity: result.minHumidity,
         maxHumidity: result.maxHumidity,
+        syncIntervalSeconds: this.syncIntervalSeconds,
       };
 
-      this.iotService.updateData(this.monitoringData.id, payload).subscribe({
+      this.iotService.updateEnvironmentThreshold(coffeeLotId, payload).subscribe({
         next: (updated) => {
-          this.monitoringData = updated;
-          this.thresholds = { ...result };
+          this.thresholds = {
+            minTemperature: updated.minTemperature,
+            maxTemperature: updated.maxTemperature,
+            minHumidity: updated.minHumidity,
+            maxHumidity: updated.maxHumidity,
+          };
+          this.syncIntervalSeconds = updated.syncIntervalSeconds || this.syncIntervalSeconds;
           this.showSnackBar('IOT.MESSAGES.CONFIG_UPDATE_SUCCESS', 'IOT.MESSAGES.OK', 3000);
-          if (this.selectedLotId) {
-            this.refreshSelectedLotHistory();
-          }
+          this.refreshSelectedLotHistory();
         },
         error: (err) => {
           console.error('[IoT Config] Error updating thresholds:', err);
@@ -512,6 +444,7 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
             : undefined;
 
         this.selectedLotId = requestedLot?.id ?? lots[0].id;
+        this.loadThresholdsForLot(this.selectedLotId);
         this.startRealtimeHistory(this.selectedLotId);
       },
       error: (err) => {
@@ -522,8 +455,28 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
 
   onLotChange(): void {
     if (this.selectedLotId) {
+      this.loadThresholdsForLot(this.selectedLotId);
       this.startRealtimeHistory(this.selectedLotId);
     }
+  }
+
+  private loadThresholdsForLot(coffeeLotId: number): void {
+    this.iotService.getEnvironmentThreshold(coffeeLotId).subscribe({
+      next: (threshold) => {
+        this.thresholds = {
+          minTemperature: threshold.minTemperature,
+          maxTemperature: threshold.maxTemperature,
+          minHumidity: threshold.minHumidity,
+          maxHumidity: threshold.maxHumidity,
+        };
+        this.syncIntervalSeconds = threshold.syncIntervalSeconds || this.syncIntervalSeconds;
+        this.applyBatchHistory(this.readingHistory);
+      },
+      error: (err) => {
+        console.error('[IoT Dashboard] Error loading environment thresholds:', err);
+        this.showSnackBar('IOT.MESSAGES.CONFIG_LOAD_ERROR', 'IOT.MESSAGES.CLOSE');
+      },
+    });
   }
 
   private average(values: number[]): number | null {
@@ -602,11 +555,6 @@ export class IotMonitoringDashboardComponent implements OnInit, AfterViewInit, O
     if (this.chartReady) {
       setTimeout(() => this.renderChart(), 0);
     }
-  }
-
-  private toDatetimeLocalValue(date: Date): string {
-    const offsetMs = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() - offsetMs).toISOString().slice(0, 16);
   }
 
   private showSnackBar(messageKey: string, actionKey: string, duration = 4000): void {

@@ -5,6 +5,17 @@ export interface ThresholdRange {
   maxHumidity: number;
 }
 
+export interface EnvironmentThreshold extends ThresholdRange {
+  id: number;
+  coffeeLotId: number;
+  syncIntervalSeconds: number;
+}
+
+export interface UpdateEnvironmentThresholdRequest extends ThresholdRange {
+  coffeeLotId: number;
+  syncIntervalSeconds: number;
+}
+
 export interface IoTMonitoringData {
   id: number;
   sensorConnected: boolean;
@@ -34,33 +45,5 @@ export interface IoTMonitoringDashboard {
   environmentalStatus: string;
   dehumidifierStatus: string;
   activeAlerts: string[];
-}
-
-/** Corresponds to IoTSimulatorReadingResource on the backend */
-export interface IoTSimulatorReading {
-  temperature: number;
-  humidity: number;
-  environmentalStatus: string;
-  dehumidifierStatus: string;
-  message: string;
-}
-
-/** Request body for updating IoT monitoring data thresholds */
-export interface UpdateIoTMonitoringDataRequest {
-  sensorConnected: boolean;
-  dehumidifierConnected: boolean;
-  minTemperature: number;
-  maxTemperature: number;
-  minHumidity: number;
-  maxHumidity: number;
-}
-
-/** Request body for manually registering an environmental reading */
-export interface CreateIoTMonitoringHistoryRequest {
-  connectionState: boolean;
-  temperature: number;
-  humidity: number;
-  timestamp: string;
-  batchId: number;
 }
 

@@ -136,55 +136,6 @@
             {{ 'IOT.CONFIGURE.BUTTON' | translate }}
           </button>
         </mat-card>
-
-        <mat-card class="panel-card manual-reading-panel">
-          <div>
-            <h2 class="panel-title">{{ 'IOT.MANUAL.TITLE' | translate }}</h2>
-            <p class="panel-subtitle">{{ 'IOT.MANUAL.SUBTITLE' | translate }}</p>
-          </div>
-
-          <form class="manual-reading-form" [formGroup]="manualReadingForm" (ngSubmit)="saveManualReading()">
-            <label class="form-field">
-              <span>{{ 'IOT.MANUAL.TEMPERATURE' | translate }}</span>
-              <input type="number" min="0" max="40" step="0.1" formControlName="temperature" />
-              <small *ngIf="manualReadingForm.controls.temperature.invalid && manualReadingForm.controls.temperature.touched">
-                {{ 'IOT.MANUAL.TEMPERATURE_ERROR' | translate }}
-              </small>
-            </label>
-
-            <label class="form-field">
-              <span>{{ 'IOT.MANUAL.HUMIDITY' | translate }}</span>
-              <input type="number" min="0" max="100" step="1" formControlName="humidity" />
-              <small *ngIf="manualReadingForm.controls.humidity.invalid && manualReadingForm.controls.humidity.touched">
-                {{ 'IOT.MANUAL.HUMIDITY_ERROR' | translate }}
-              </small>
-            </label>
-
-            <label class="form-field">
-              <span>{{ 'IOT.MANUAL.CONNECTION_STATE' | translate }}</span>
-              <select formControlName="connectionState">
-                <option [ngValue]="true">{{ 'IOT.HISTORY.CONNECTED' | translate }}</option>
-                <option [ngValue]="false">{{ 'IOT.HISTORY.DISCONNECTED' | translate }}</option>
-              </select>
-            </label>
-
-            <label class="form-field">
-              <span>{{ 'IOT.MANUAL.TIMESTAMP' | translate }}</span>
-              <input type="datetime-local" formControlName="timestamp" />
-              <small *ngIf="manualReadingForm.controls.timestamp.invalid && manualReadingForm.controls.timestamp.touched">
-                {{ 'IOT.MANUAL.TIMESTAMP_ERROR' | translate }}
-              </small>
-            </label>
-
-            <div class="manual-reading-actions">
-              <span>{{ 'IOT.MANUAL.BATCH_HINT' | translate }} <strong>{{ getSelectedLotName() || ('IOT.LOTS.NO_AVAILABLE_SHORT' | translate) }}</strong></span>
-              <button mat-raised-button class="action-button" type="submit"
-                [disabled]="isSavingManualReading || !selectedLotId">
-                {{ isSavingManualReading ? ('IOT.MANUAL.SAVING' | translate) : ('IOT.MANUAL.SAVE' | translate) }}
-              </button>
-            </div>
-          </form>
-        </mat-card>
       </section>
 
       <section *ngIf="activeSection === 'alerts'">

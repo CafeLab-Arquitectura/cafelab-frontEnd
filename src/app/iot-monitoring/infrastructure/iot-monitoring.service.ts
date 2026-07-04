@@ -5,12 +5,10 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/infrastructure/AuthService';
 import type {
-  CreateIoTMonitoringHistoryRequest,
+  EnvironmentThreshold,
   IoTMonitoringDashboard,
-  IoTMonitoringData,
   IoTMonitoringHistory,
-  IoTSimulatorReading,
-  UpdateIoTMonitoringDataRequest,
+  UpdateEnvironmentThresholdRequest,
 } from '../domain/model/environmental-reading.entity';
 import type { CoffeeLotSummary } from '../domain/model/coffee-lot-summary.model';
 
@@ -55,33 +53,24 @@ export class IoTMonitoringService {
   }
 
   /**
-   * GET /api/v1/iot-monitoring/data
-   * Retorna (o crea con defaults) la configuración IoT del usuario autenticado.
+   * GET /api/v1/environment-thresholds/coffee-lot/{coffeeLotId}
+   * Retorna o crea con defaults los umbrales ambientales del lote.
    */
-  getData(): Observable<IoTMonitoringData> {
-    const url = `${this.baseUrl}${environment.iotMonitoringDataEndpointPath}`;
-    return this.http.get<IoTMonitoringData>(url, this.httpOptions);
+  getEnvironmentThreshold(coffeeLotId: number): Observable<EnvironmentThreshold> {
+    const url = `${this.baseUrl}${environment.environmentThresholdsEndpointPath}/coffee-lot/${coffeeLotId}`;
+    return this.http.get<EnvironmentThreshold>(url, this.httpOptions);
   }
 
   /**
-   * PUT /api/v1/iot-monitoring/data/{dataId}
-   * Actualiza los umbrales y estado de conexión de la configuración IoT.
+   * PUT /api/v1/environment-thresholds/coffee-lot/{coffeeLotId}
+   * Actualiza los umbrales ambientales que consume el edge.
    */
-  updateData(dataId: number, payload: UpdateIoTMonitoringDataRequest): Observable<IoTMonitoringData> {
-    const url = `${this.baseUrl}${environment.iotMonitoringDataEndpointPath}/${dataId}`;
-    return this.http.put<IoTMonitoringData>(url, payload, this.httpOptions);
-  }
-
-  /**
-   * POST /api/v1/iot-monitoring/simulator/generate-reading
-   * Genera una lectura aleatoria en el servidor, la persiste en BD y la retorna.
-   */
-  generateSimulatedReading(batchId?: number | null): Observable<IoTSimulatorReading> {
-    let url = `${this.baseUrl}${environment.iotMonitoringSimulatorEndpointPath}`;
-    if (batchId) {
-      url += `?batchId=${batchId}`;
-    }
-    return this.http.post<IoTSimulatorReading>(url, {}, this.httpOptions);
+  updateEnvironmentThreshold(
+    coffeeLotId: number,
+    payload: UpdateEnvironmentThresholdRequest,
+  ): Observable<EnvironmentThreshold> {
+    const url = `${this.baseUrl}${environment.environmentThresholdsEndpointPath}/coffee-lot/${coffeeLotId}`;
+    return this.http.put<EnvironmentThreshold>(url, payload, this.httpOptions);
   }
 
   /**
@@ -105,15 +94,6 @@ export class IoTMonitoringService {
           .slice(0, 10)
       )
     );
-  }
-
-  /**
-   * POST /api/v1/iot-monitoring/histories
-   * Registers a manual environmental reading for a coffee lot.
-   */
-  createManualHistory(payload: CreateIoTMonitoringHistoryRequest): Observable<IoTMonitoringHistory> {
-    const url = `${this.baseUrl}${environment.iotMonitoringHistoriesEndpointPath}`;
-    return this.http.post<IoTMonitoringHistory>(url, payload, this.httpOptions);
   }
 
   /**
