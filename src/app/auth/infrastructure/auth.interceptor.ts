@@ -9,6 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     token = token.slice(7).trim() || null;
   }
   const isAuthEndpoint = req.url.includes('/api/v1/authentication/');
+  const isProfileCreation = req.method === 'POST' && req.url.includes('/api/v1/profiles');
 
   let headers = req.headers;
   if (!headers.has('Content-Type') && !(req.body instanceof FormData)) {
@@ -18,7 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     headers = headers.set('Accept', 'application/json');
   }
 
-  if (token && !isAuthEndpoint) {
+  if (token && !isAuthEndpoint && !isProfileCreation) {
     headers = headers.set('Authorization', `Bearer ${token}`);
   }
 
