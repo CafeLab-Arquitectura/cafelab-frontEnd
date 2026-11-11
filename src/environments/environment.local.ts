@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  serverBaseUrl: 'http://localhost:8080',
+  serverBaseUrl: 'https://includes-glasses-instruments-antonio.trycloudflare.com',
   coffeeLotsEndpointPath: '/api/v1/coffee-lots',
   suppliersEndpointPath: '/api/v1/suppliers',
   roastProfileEndpointPath: '/api/v1/roast-profiles',
