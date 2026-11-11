@@ -1,6 +1,6 @@
-const target = 'http://141.148.45.231:8080';
+const target = 'https://includes-glasses-instruments-antonio.trycloudflare.com';
 
-const forward = { target, secure: false, changeOrigin: true };
+const forward = { target, secure: true, changeOrigin: true };
 
 module.exports = {
   '/api': forward,
