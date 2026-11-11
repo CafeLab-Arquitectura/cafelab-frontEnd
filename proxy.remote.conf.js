@@ -1,6 +1,6 @@
-const target = 'https://cafelab-euafbrgfdja5e0h9.canadacentral-01.azurewebsites.net';
+const target = 'http://141.148.45.231:8080';
 
-const forward = { target, secure: true, changeOrigin: true };
+const forward = { target, secure: false, changeOrigin: true };
 
 module.exports = {
   '/api': forward,
