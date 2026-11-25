@@ -1,4 +1,4 @@
-const target = 'https://includes-glasses-instruments-antonio.trycloudflare.com';
+const target = 'https://magnificent-floral-pregnant-feb.trycloudflare.com';
 
 const forward = { target, secure: true, changeOrigin: true };
 

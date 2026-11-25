@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  serverBaseUrl: 'https://includes-glasses-instruments-antonio.trycloudflare.com',
+  serverBaseUrl: 'https://magnificent-floral-pregnant-feb.trycloudflare.com',
   coffeeLotsEndpointPath: '/api/v1/coffee-lots',
   suppliersEndpointPath: '/api/v1/suppliers',
   roastProfileEndpointPath: '/api/v1/roast-profiles',

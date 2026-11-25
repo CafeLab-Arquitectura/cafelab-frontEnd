@@ -14,7 +14,7 @@ if (fs.existsSync(envPath)) {
 }
 
 // ─── Inyectar en los archivos de environment de Angular ──────────
-const apiUrl = process.env.API_URL || 'https://includes-glasses-instruments-antonio.trycloudflare.com';
+const apiUrl = process.env.API_URL || 'https://magnificent-floral-pregnant-feb.trycloudflare.com';
 
 const targetPaths = [
   './src/environments/environment.ts',
