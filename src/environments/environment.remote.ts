@@ -25,5 +25,6 @@ export const environment = {
   iotMonitoringDashboardEndpointPath: '/api/v1/iot-monitoring/dashboard',
   iotMonitoringSimulatorEndpointPath: '/api/v1/iot-monitoring/simulator/generate-reading',
   telemetryRecordsEndpointPath: '/api/v1/telemetry-records',
-  environmentThresholdsEndpointPath: '/api/v1/environment-thresholds'
+  environmentThresholdsEndpointPath: '/api/v1/environment-thresholds',
+  documentAutofillEndpointPath: '/api/v1/documents/autofill'
 };

@@ -112,19 +112,44 @@
     <div class="modal-content">
       <h2>{{ 'MODAL.NEW_COFFEE_LOT' | translate }}</h2>
 
-      <form (ngSubmit)="registerLot()" #lotForm="ngForm">
+      <div class="autofill-box">
+        <input
+          #autofillInput
+          type="file"
+          class="autofill-file-input"
+          accept="image/jpeg,image/png,application/pdf,.jpg,.jpeg,.png,.pdf"
+          (change)="onAutofillFileSelected($event)"
+        />
+        <button
+          type="button"
+          class="autofill-button"
+          (click)="autofillInput.click()"
+          [disabled]="autofillLoading"
+          [attr.aria-busy]="autofillLoading"
+        >
+          <span *ngIf="autofillLoading" class="autofill-spinner" aria-hidden="true"></span>
+          <i *ngIf="!autofillLoading" class="material-icons" aria-hidden="true">upload_file</i>
+          {{ (autofillLoading ? 'COFFEE_LOT_BC.AUTOFILL.LOADING' : 'COFFEE_LOT_BC.AUTOFILL.BUTTON') | translate }}
+        </button>
+        <p class="autofill-help">{{ 'COFFEE_LOT_BC.AUTOFILL.HELP' | translate }}</p>
+        <div *ngIf="autofillError" class="autofill-error" role="alert">{{ autofillError }}</div>
+        <div *ngIf="autofillNotice" class="autofill-notice" role="status">{{ autofillNotice }}</div>
+      </div>
+
+      <form (ngSubmit)="registerLot()" #lotForm="ngForm" [class.autofill-busy]="autofillLoading">
         <div class="form-row">
           <div class="form-group">
             <label>{{ 'FORM.LABEL.NAME' | translate }}</label>
-            <input type="text" [(ngModel)]="newLot.lot_name" name="lot_name" required />
+            <input type="text" [class.autofilled]="autofilledFields.has('lot_name')" [(ngModel)]="newLot.lot_name" name="lot_name" required />
             <div *ngIf="fieldErrors['lot_name']" class="field-error">
               {{ fieldErrors['lot_name'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['lot_name']" class="autofill-hint">{{ hint }}</div>
           </div>
 
           <div class="form-group">
             <label>{{ 'FORM.LABEL.COFFEE_TYPE' | translate }}</label>
-            <select [(ngModel)]="newLot.coffee_type" name="coffee_type" required>
+            <select [class.autofilled]="autofilledFields.has('coffee_type')" [(ngModel)]="newLot.coffee_type" name="coffee_type" required>
               <option value="" disabled selected>
                 {{ 'FORM.SELECT_PLACEHOLDER.SELECT_TYPE' | translate }}
               </option>
@@ -135,39 +160,43 @@
             <div *ngIf="fieldErrors['coffee_type']" class="field-error">
               {{ fieldErrors['coffee_type'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['coffee_type']" class="autofill-hint">{{ hint }}</div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>{{ 'FORM.LABEL.ALTITUDE' | translate }}</label>
-            <input type="number" [(ngModel)]="newLot.altitude" name="altitude_masl" min="1" required />
+            <input type="number" [class.autofilled]="autofilledFields.has('altitude')" [(ngModel)]="newLot.altitude" name="altitude_masl" min="1" required />
             <div *ngIf="fieldErrors['altitude']" class="field-error">
               {{ fieldErrors['altitude'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['altitude']" class="autofill-hint">{{ hint }}</div>
           </div>
 
           <div class="form-group">
             <label>{{ 'FORM.LABEL.ORIGIN' | translate }}</label>
-            <input type="text" [(ngModel)]="newLot.origin" name="origin_country" required />
+            <input type="text" [class.autofilled]="autofilledFields.has('origin')" [(ngModel)]="newLot.origin" name="origin_country" required />
             <div *ngIf="fieldErrors['origin']" class="field-error">
               {{ fieldErrors['origin'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['origin']" class="autofill-hint">{{ hint }}</div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>{{ 'FORM.LABEL.WEIGHT' | translate }}</label>
-            <input type="number" [(ngModel)]="newLot.weight" name="weight_kg" min="0.01" step="0.01" required />
+            <input type="number" [class.autofilled]="autofilledFields.has('weight')" [(ngModel)]="newLot.weight" name="weight_kg" min="0.01" step="0.01" required />
             <div *ngIf="fieldErrors['weight']" class="field-error">
               {{ fieldErrors['weight'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['weight']" class="autofill-hint">{{ hint }}</div>
           </div>
 
           <div class="form-group">
             <label>{{ 'FORM.LABEL.PROCESS' | translate }}</label>
-            <select [(ngModel)]="newLot.processing_method" name="processing_method" required>
+            <select [class.autofilled]="autofilledFields.has('processing_method')" [(ngModel)]="newLot.processing_method" name="processing_method" required>
               <option value="" disabled selected>
                 {{ 'FORM.SELECT_PLACEHOLDER.SELECT_PROCESS' | translate }}
               </option>
@@ -178,6 +207,7 @@
             <div *ngIf="fieldErrors['processing_method']" class="field-error">
               {{ fieldErrors['processing_method'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['processing_method']" class="autofill-hint">{{ hint }}</div>
           </div>
         </div>
 
@@ -186,6 +216,7 @@
             <label>{{ 'FORM.LABEL.SUPPLIER' | translate }}</label>
             <select
               [(ngModel)]="newLot.supplier_id"
+              [class.autofilled]="autofilledFields.has('supplier_id')"
               name="supplier_id"
               required
               (change)="onSupplierChange($event)"
@@ -200,6 +231,7 @@
             <div *ngIf="fieldErrors['supplier_id']" class="field-error">
               {{ fieldErrors['supplier_id'] }}
             </div>
+            <div *ngFor="let hint of autofillHints['supplier_id']" class="autofill-hint">{{ hint }}</div>
           </div>
 
           <div class="form-group">
@@ -241,10 +273,11 @@
               </button>
             </div>
           </div>
+          <div *ngFor="let hint of autofillHints['certifications']" class="autofill-hint">{{ hint }}</div>
         </div>
 
         <div class="form-actions">
-          <button class="submit-button" type="submit">
+          <button class="submit-button" type="submit" [disabled]="autofillLoading">
             {{ 'BUTTON.REGISTER' | translate }}
           </button>
           <button class="cancel-button" type="button" (click)="cancelRegister()">

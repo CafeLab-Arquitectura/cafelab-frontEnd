@@ -1,4 +1,4 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpContextToken, HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { EMPTY, retry, timer } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -6,6 +6,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
+
+/**
+ * Marca una petición para que este interceptor no la reintente ni oculte su error.
+ * Úsalo cuando el backend ya tiene su propia política de reintento (p. ej. document-autofill)
+ * o cuando el componente necesita recibir el 5xx para mostrar su propio mensaje.
+ */
+export const SKIP_RETRY = new HttpContextToken<boolean>(() => false);
 
 /**
  * Interceptor que reintenta automáticamente las peticiones HTTP que fallen
@@ -16,6 +23,10 @@ const RETRY_DELAY_MS = 1000;
  * - Errores 4xx → NO se reintenta, se propaga al componente normalmente
  */
 export const retryInterceptor: HttpInterceptorFn = (req, next) => {
+  if (req.context.get(SKIP_RETRY)) {
+    return next(req);
+  }
+
   const snackBar = inject(MatSnackBar);
 
   return next(req).pipe(

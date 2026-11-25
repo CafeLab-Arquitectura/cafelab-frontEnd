@@ -565,8 +565,8 @@
       "lot": "Lote Vinculado",
       "selectLot": "Seleccionar lote",
       "acidity": "Acidez",
-      "sweetness":"Dulzura",
-      "body":"Cuerpo"
+      "sweetness": "Dulzura",
+      "body": "Cuerpo"
     },
     "columns": {
       "name": "Nombre",
@@ -608,7 +608,7 @@
     "temperaturaTambor": "Temperatura del tambor",
     "firstCrack": "First Crack (estimado)",
     "secondCrack": "Second Crack (estimado)",
-    "roastInsight":"Generar Reporte de Analisis Tueste-Sabor",
+    "roastInsight": "Generar Reporte de Analisis Tueste-Sabor",
     "trazability": "Generar Reporte de Trazabilidad"
   },
   "Compare": {
@@ -1218,6 +1218,18 @@
         "ORGANIC": "Orgánico",
         "RAINFOREST": "Rainforest Alliance"
       }
+    },
+    "AUTOFILL": {
+      "BUTTON": "Autocompletar desde guía",
+      "LOADING": "Leyendo la guía…",
+      "HELP": "Sube la guía de remisión (JPG, PNG o PDF de 1 página, máx. 10 MB). Los datos se colocan en el formulario y no se registra nada hasta que pulses Registrar.",
+      "DONE": "Se completaron {{count}} campos desde «{{file}}». Revisa los datos antes de registrar.",
+      "NONE": "No se encontraron datos en «{{file}}». Completa el formulario manualmente.",
+      "INVALID_TYPE": "Formato no permitido. Usa JPG, PNG o PDF.",
+      "TOO_LARGE": "El archivo supera el máximo de 10 MB.",
+      "ERROR": "No se pudo leer el documento automáticamente. Completa el formulario manualmente.",
+      "SUPPLIER_MATCHED": "Proveedor seleccionado según la guía: {{name}}. Verifícalo.",
+      "SUPPLIER_HINT": "La guía indica el proveedor «{{name}}». Selecciónalo de la lista."
     }
   },
   "ROAST_PROFILE_BC": {

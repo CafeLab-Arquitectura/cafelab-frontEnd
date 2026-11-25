@@ -579,3 +579,97 @@
   gap: 12px;
   margin-top: 25px;
 }
+
+/* ── Autocompletar desde guía de remisión ─────────────────────── */
+.modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.autofill-box {
+  border: 1px dashed #b9c4bf;
+  border-radius: 8px;
+  background-color: #f6f8f7;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+
+.autofill-file-input {
+  display: none;
+}
+
+.autofill-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #4A5A54;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.autofill-button:hover:not(:disabled) {
+  background-color: #3D4B44;
+}
+
+.autofill-button:disabled {
+  opacity: 0.75;
+  cursor: progress;
+}
+
+.autofill-button .material-icons {
+  color: white;
+}
+
+.autofill-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.autofill-help {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.autofill-error,
+.autofill-notice {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.autofill-error {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.autofill-notice {
+  background-color: #e8f2ec;
+  color: #2e5d43;
+}
+
+form.autofill-busy {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.form-group input.autofilled,
+.form-group select.autofilled {
+  border-color: #6f9a80;
+  background-color: #f1f7f3;
+}
+
+.autofill-hint {
+  color: #8a5a00;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}

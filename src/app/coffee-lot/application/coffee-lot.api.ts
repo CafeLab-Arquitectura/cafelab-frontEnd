@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { CoffeeLotApiEndpoint } from '../infrastructure/coffee-lot-api-endpoint';
 import type { CoffeeLot } from '../domain/model/coffee-lot.entity';
+import { DocumentAutofillApiEndpoint } from '../infrastructure/document-autofill-api-endpoint';
+import type { DocumentAutofillResponse } from '../infrastructure/document-autofill.response';
 
 /**
  * Fachada del bounded context Coffee Lot (equivalente a {@code SupplierApi}).
@@ -10,7 +12,15 @@ import type { CoffeeLot } from '../domain/model/coffee-lot.entity';
   providedIn: 'root',
 })
 export class CoffeeLotApi {
-  constructor(private readonly  coffeeLotApiEndpoint: CoffeeLotApiEndpoint) {}
+  constructor(
+    private readonly coffeeLotApiEndpoint: CoffeeLotApiEndpoint,
+    private readonly documentAutofillApiEndpoint: DocumentAutofillApiEndpoint,
+  ) {}
+
+  /** Lee una guía de remisión y devuelve sugerencias para el formulario. No crea el lote. */
+  autofillFromDocument(file: File): Observable<DocumentAutofillResponse> {
+    return this.documentAutofillApiEndpoint.autofill(file);
+  }
 
   getAll(): Observable<CoffeeLot[]> {
     return this.coffeeLotApiEndpoint.getAll();

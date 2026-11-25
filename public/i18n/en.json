@@ -563,9 +563,8 @@
       "lot": "Linked Lot",
       "selectLot": "Select lot",
       "acidity": "Acidity",
-      "sweetness":"Sweetness",
-      "body":"Body"
-
+      "sweetness": "Sweetness",
+      "body": "Body"
     },
     "columns": {
       "name": "Name",
@@ -607,7 +606,7 @@
     "temperaturaTambor": "Drum temperature",
     "firstCrack": "First Crack (estimated)",
     "secondCrack": "Second Crack (estimated)",
-    "roastInsight":"Generate Roast Insights Report",
+    "roastInsight": "Generate Roast Insights Report",
     "trazability": "Generate Trazability Report"
   },
   "Compare": {
@@ -1217,6 +1216,18 @@
         "ORGANIC": "Organic",
         "RAINFOREST": "Rainforest Alliance"
       }
+    },
+    "AUTOFILL": {
+      "BUTTON": "Autofill from waybill",
+      "LOADING": "Reading the document…",
+      "HELP": "Upload the waybill (JPG, PNG or 1-page PDF, max 10 MB). The data is placed in the form; nothing is saved until you press Register.",
+      "DONE": "{{count}} fields were filled from \"{{file}}\". Review them before registering.",
+      "NONE": "No data was found in \"{{file}}\". Please fill in the form manually.",
+      "INVALID_TYPE": "File type not allowed. Use JPG, PNG or PDF.",
+      "TOO_LARGE": "The file exceeds the 10 MB limit.",
+      "ERROR": "The document could not be read automatically. Please fill in the form manually.",
+      "SUPPLIER_MATCHED": "Supplier selected from the waybill: {{name}}. Please verify it.",
+      "SUPPLIER_HINT": "The waybill names the supplier \"{{name}}\". Select it from the list."
     }
   },
   "ROAST_PROFILE_BC": {
