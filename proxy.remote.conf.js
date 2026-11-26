@@ -1,4 +1,4 @@
-const target = 'https://magnificent-floral-pregnant-feb.trycloudflare.com';
+const target = 'https://spy-mins-communication-editions.trycloudflare.com';
 
 const forward = { target, secure: true, changeOrigin: true };
 
