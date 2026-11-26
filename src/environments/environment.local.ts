@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  serverBaseUrl: 'https://robinson-democratic-headphones-animation.trycloudflare.com',
+  serverBaseUrl: 'https://obvious-carrier-wide-blackjack.trycloudflare.com',
   coffeeLotsEndpointPath: '/api/v1/coffee-lots',
   suppliersEndpointPath: '/api/v1/suppliers',
   roastProfileEndpointPath: '/api/v1/roast-profiles',
